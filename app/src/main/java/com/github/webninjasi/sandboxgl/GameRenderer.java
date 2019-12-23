@@ -10,6 +10,7 @@ import android.opengl.GLES31;
 import android.opengl.GLSurfaceView;
 import android.util.DisplayMetrics;
 import android.util.Pair;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class GameRenderer implements GLSurfaceView.Renderer {
@@ -20,7 +21,8 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private int particleScale = 6;
     private int lastType;
 
-    private int brushRadius = 9;
+    private int brushRadius = 4;
+    private int brushType = 0;
 
     private int frameCount = 0;
     private long totalTime = 0;
@@ -28,7 +30,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     private double avarageFPS;
 
     private TextView myInfoText;
-
     private Activity ctx;
 
     public GameRenderer(GameSurfaceView sv, Context context, TextView infoText){
@@ -38,7 +39,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
         ((Activity)context).getWindowManager()
                 .getDefaultDisplay()
                 .getMetrics(displayMetrics);
-        int m_ScreenHeight = displayMetrics.heightPixels - 100;
+        int m_ScreenHeight = displayMetrics.heightPixels - 300;
         int m_ScreenWidth = displayMetrics.widthPixels;
 
         gWorld = new GameWorld(m_ScreenWidth/particleScale, m_ScreenHeight/particleScale, 1000, this, particleScale);
@@ -86,7 +87,7 @@ public class GameRenderer implements GLSurfaceView.Renderer {
             int x = (int) surfaceView.getMouseX();
             int y = (int) surfaceView.getMouseY();
 
-            brush(Pair.create(x / particleScale, y / particleScale), brushRadius);
+            brush(Pair.create(x / particleScale, y / particleScale));
         }
 
         gWorld.onUpdate(uScreen, deltaTime);
@@ -101,7 +102,6 @@ public class GameRenderer implements GLSurfaceView.Renderer {
             avarageFPS = 1000/((totalTime/frameCount)/1000000);
             frameCount = 0;
             totalTime = 0;
-            //System.out.println(avarageFPS);
         }
 
         ctx.runOnUiThread(new Runnable() {
@@ -128,16 +128,22 @@ public class GameRenderer implements GLSurfaceView.Renderer {
     }
 
 
-    public void brush(Pair<Integer, Integer> p, int size){
+    public void brush(Pair<Integer, Integer> p){
         Pair<Integer, Integer> bp;
-        for (int i = -size/2; i<=size/2; i++){
-            for (int j = -size/2; j<=size/2; j++){
+        for (int i = -brushRadius; i<=brushRadius; i++){
+            for (int j = -brushRadius; j<=brushRadius; j++){
                 bp = Pair.create(p.first + i, p.second + j);
 
-                gWorld.createParticle(Pair.create(bp.first, bp.second), 1);
-                //                //lastType++;
-                //if (lastType > 6) lastType = 1;
+                gWorld.createParticle(bp,brushType);
             }
         }
+    }
+
+    public void setBrushRadius(int brushRadius) {
+        this.brushRadius = brushRadius;
+    }
+
+    public void setBrushType(int val) {
+        this.brushType = val;
     }
 }

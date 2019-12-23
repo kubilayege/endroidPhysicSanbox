@@ -5,9 +5,11 @@ import android.graphics.Color;
 import android.opengl.GLSurfaceView;
 import android.util.Pair;
 import android.view.MotionEvent;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class GameSurfaceView extends GLSurfaceView {
+
     private final GameRenderer renderer;
 
     private float mouseX, mouseY;
@@ -58,5 +60,9 @@ public class GameSurfaceView extends GLSurfaceView {
 
     public boolean isMouseDown() {
         return mouseDown;
+    }
+
+    public GameRenderer getRenderer() {
+        return renderer;
     }
 }

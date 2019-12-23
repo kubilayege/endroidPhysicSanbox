@@ -17,7 +17,9 @@ public class SParticle  {
     private Rect rect;
     private int maxSpeed;
 
-    public SParticle(Pair<Integer, Integer> pos, int _size, boolean _obstacle, Pair<Integer, Integer> acc, int maxSpeed){
+    private Paint mPaint;
+
+    public SParticle(Pair<Integer, Integer> pos, int _size, boolean _obstacle, Pair<Integer, Integer> acc, int maxSpeed, Paint paint){
         posX = pos.first;
         posY = pos.second;
         velX = 0;
@@ -26,11 +28,12 @@ public class SParticle  {
         size = _size;
         obstacle = _obstacle;
         this.maxSpeed = maxSpeed;
+        mPaint = paint;
         rect = new Rect((int) posX * size - size/2,(int) posY * size - size/2,(int) posX * size + size/2,(int) posY * size + size/2);
     }
 
-    public void draw(Canvas canvas, Paint paint) {
-        canvas.drawRect(rect, paint);
+    public void draw(Canvas canvas) {
+        canvas.drawRect(rect, mPaint);
     }
 
     public void update(double stepTime) {

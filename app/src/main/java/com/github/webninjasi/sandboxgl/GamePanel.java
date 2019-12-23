@@ -25,7 +25,7 @@ class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread;
     private Hashtable<Pair<Integer, Integer>, SParticle> particleMap;
     private List<SParticle> particles = new ArrayList<SParticle>();
-    private Paint mPaint;
+    private Paint mPaint[] = new Paint[7];
     private Paint textPaint;
 
     private int width;
@@ -39,6 +39,7 @@ class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private Pair<Integer, Integer> gravity = Pair.create(0,10);
 
     private int brushRadius = 9;
+    private int brushColor = 0;
 
     private boolean touchDown;
     private Pair<Integer, Integer> touchPos;
@@ -49,8 +50,20 @@ class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         thread = new MainThread(getHolder(),this);
         setFocusable(true);
 
-        mPaint = new Paint();
-        mPaint.setColor(Color.rgb(255,0,0));
+        mPaint[0] = new Paint();
+        mPaint[0].setColor(Color.rgb(255,0,0));
+        mPaint[1] = new Paint();
+        mPaint[1].setColor(Color.rgb(0,255,0));
+        mPaint[2] = new Paint();
+        mPaint[2].setColor(Color.rgb(0,0,255));
+        mPaint[3] = new Paint();
+        mPaint[3].setColor(Color.rgb(0,255,255));
+        mPaint[4] = new Paint();
+        mPaint[4].setColor(Color.rgb(255,0,255));
+        mPaint[5] = new Paint();
+        mPaint[5].setColor(Color.rgb(255,255,0));
+        mPaint[6] = new Paint();
+        mPaint[6].setColor(Color.rgb(255,255,255));
 
         textPaint = new Paint();
         textPaint.setTextSize(25);
@@ -62,7 +75,7 @@ class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         ((Activity)context).getWindowManager()
                 .getDefaultDisplay()
                 .getMetrics(displayMetrics);
-        int m_ScreenHeight = displayMetrics.heightPixels - 100;
+        int m_ScreenHeight = displayMetrics.heightPixels - 300;
         int m_ScreenWidth = displayMetrics.widthPixels;
 
         width = m_ScreenWidth / particleSize;
@@ -86,10 +99,10 @@ class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         obstacleCount = width * 2 + (height-2) * 2;
     }
 
-    public void brush(Pair<Integer, Integer> p, int size){
+    public void brush(Pair<Integer, Integer> p){
         Pair<Integer, Integer> bp;
-        for (int i = -size/2; i<=size/2; i++){
-            for (int j = -size/2; j<=size/2; j++){
+        for (int i = -brushRadius; i<=brushRadius; i++){
+            for (int j = -brushRadius; j<=brushRadius; j++){
                 bp = Pair.create(p.first + i, p.second + j);
                 addParticle(bp, false);
             }
@@ -104,7 +117,7 @@ class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
             if (!obstacle && (p.first == 0 || p.first == width-1 || p.second == 0 || p.second == height-1))
                 return;
 
-            SParticle ptcl = new SParticle(bp, particleSize, obstacle, gravity, maxSpeed);
+            SParticle ptcl = new SParticle(bp, particleSize, obstacle, gravity, maxSpeed, mPaint[brushColor]);
             particles.add(ptcl);
             particleMap.put(bp, ptcl);
         }
@@ -154,7 +167,7 @@ class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update(double deltaTime){
         if (touchDown) {
-            brush(touchPos, brushRadius);
+            brush(touchPos);
         }
 
         int particleCount = particles.size();
@@ -196,9 +209,17 @@ class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         Object list[] = particles.toArray();
 
         for (int i=0; i<particleCount; i++){
-            ((SParticle) list[i]).draw(canvas, mPaint);
+            ((SParticle) list[i]).draw(canvas);
         }
 
         canvas.drawText(((int)avarageFPS) + " FPS/" + (particleCount-obstacleCount) + " Objs", 50, 50, textPaint);
+    }
+
+    public void setBrushRadius(int val){
+        brushRadius = val;
+    }
+
+    public void setColor(int val){
+        brushColor = val;
     }
 }
