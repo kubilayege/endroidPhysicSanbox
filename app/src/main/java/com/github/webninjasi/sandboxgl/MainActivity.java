@@ -34,12 +34,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openGl_Compute_Activity(){
-        Intent intent = new Intent(this, OpenGLActivity.class);
-        startActivity(intent);
+        Intent niyet = new Intent(this, OpenGLActivity.class);
+        startActivity(niyet);
     }
     public void surfaceView_Activity(){
-        Intent intent = new Intent(this, SurfaceViewActivity.class);
-        startActivity(intent);
+        Intent niyet = new Intent(this, SurfaceViewActivity.class);
+        startActivity(niyet);
     }
     @Override
     protected void onResume()
