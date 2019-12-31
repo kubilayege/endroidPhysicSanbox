@@ -10,9 +10,6 @@ public class MainThread extends Thread {
     private boolean running;
     public static Canvas canvas;
 
-    public void setRunning(boolean running){
-        this.running = running;
-    }
     public MainThread(SurfaceHolder surfaceHolder, GamePanel gamePanel){
         super();
         this.surfaceHolder = surfaceHolder;
@@ -55,5 +52,9 @@ public class MainThread extends Thread {
                 //System.out.println(avarageFPS);
             }
         }
+    }
+
+    public void setRunning(boolean running){
+        this.running = running;
     }
 }
